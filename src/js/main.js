@@ -1,39 +1,47 @@
-//mettre dans obj
-const drumKit = {
-    run(){
-        document.documentElement.classList.add('js-enabled');
-        window.addEventListener('keydown', ()=>{
-            this.action(event);
-        });
-        const keys = document.querySelectorAll('.key');
-        keys.forEach(key => key.addEventListener('transitionend', ()=>{
-            this.rmv;
-        }));
+(function (){const DrumKit = {
+     run(){
+     document.documentElement.classList.add('js-enabled');
+
+     this.keys = document.querySelectorAll('.key');
+     this.keys.forEach(key => key.addEventListener('transitionend', (event)=>{
+         this.removeTransition(event);
+     }));
+
+     document.addEventListener('keydown', (event)=>{
+       this.action(event);
+     });
+
 
     },
     action(event){
-        const audio = document.querySelector(`audio[data-key="${event.key}"]`);
-        const key = document.querySelector(`.key[data-key="${event.key}"]`);
 
-        if (!audio) return;
+        this.audio = document.querySelector(`audio[data-key="${event.key}"]`);
+        this.key = document.querySelector(`.key[data-key="${event.key}"]`);
+
+        if (!this.audio) return;
 
 
-        audio.currentTime = 0; //remet l'audio a 0 dès quon click dessus
-        audio.play();
-        key.classList.add('playing');
-        let currentKey = event.key;
-        document.body.className = currentKey
+        this.audio.currentTime = 0; //remet l'audio a 0 dès quon click dessus
+        this.audio.play();
+
+        this.key.classList.add('playing');
+
+        // document.body.className = currentKey;
+        this.currentKey = event.key;
+        console.log(this.currentKey);
+        document.body.classList = this.currentKey;
     },
-    rmv (event){
-        if (event.propertyName !== 'transform') return;
-        this.classList.remove('playing');
+    removeTransition(event) {
+         this.key.classList.remove('playing');
+         document.body.classList = "";
     }
 };
-drumKit.run();
+DrumKit.run();
+})();
 
-/* cODE QUI Marche
-//déclaration de la fonction qui sort le sons quand on clique sur la touche
+/* code avant la mise dans l'objet :
 
+document.documentElement.classList.add('js-enabled');
 
 function action(event){
     const audio = document.querySelector(`audio[data-key="${event.key}"]`);
@@ -41,24 +49,23 @@ function action(event){
 
     if (!audio) return;
 
-
     audio.currentTime = 0; //remet l'audio a 0 dès quon click dessus
     audio.play();
 
     key.classList.add('playing');
-    // let currentKey = event.key;
-    // document.body.className = currentKey;
+
+    this.currentKey = event.key;
+    console.log(this.currentKey);
+    document.body.classList = this.currentKey;
 }
 function removeTransition(event) {
     if (event.propertyName !== 'transform') return;
     this.classList.remove('playing');
-    //document.body.style.backgroundColor = "#fff";
-    //document.body.style.transition = ".08s ease";
+    document.body.classList = "";
 }
 
 const keys = document.querySelectorAll('.key');
 keys.forEach(key => key.addEventListener('transitionend', removeTransition));
 
-window.addEventListener('keydown', action);
-
+document.addEventListener('keydown', action);
 */
